@@ -1,0 +1,2015 @@
+
+SQL QUERY FOR PROJECT : STATEWISE FINANCIAL ANALYSIS FOR INDIA
+
+
+CREATED THE DATABASE:
+
+CREATE DATABASE project;
+
+
+
+
+--1)DATA CLEANING OF AGGREGATE EXPENDITURE TABLE
+--[Changed Blank cells and cells Containing '–' into Null and stored the table as 'AGGREGATE_EXPENSE']
+ 
+
+
+SELECT * INTO AGGREGATE_EXPENSE FROM (
+SELECT STATE AS Year,
+CASE WHEN [ANDHRA PRADESH] = '–' THEN NULL ELSE [ANDHRA PRADESH] 
+END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' THEN NULL ELSE [Arunachal Pradesh] 
+END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' THEN NULL ELSE [Chhattisgarh] 
+END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' THEN NULL ELSE [Himachal Pradesh] 
+END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' THEN NULL ELSE [Jammu & Kashmir] 
+END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' THEN NULL ELSE [Madhya Pradesh] 
+END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' THEN NULL ELSE [Uttar Pradesh] 
+END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Aggregate_Expenditure)AS A;
+
+
+
+
+--[CHANGED THE DATATYPE OF EACH COLUMNS CONTAINING VALUES INTO FLOAT BECAUSE BY DEFAULT IT WAS IN VARCHAR(50)]
+
+
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE AGGREGATE_EXPENSE
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+
+--[CREATED NEW TABLE (NEW_TABLE) WITH NEW COLUMN NAMED AS 'YEAR RANGE' GROUPED AS 5 YEARS DATA]
+
+select * into new_table from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from AGGREGATE_EXPENSE)b)c
+
+
+
+
+
+--[SUM AGGREGATED THE VALUES IN THE 5 YEAR TERM RANGE FOR EACH COLUMNS ]
+
+select * into Aggregate_Expenditures from (
+select distinct(year_range) ,
+sum([andra pradesh])over (partition by year_range order by year_range)
+as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) 
+as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) as 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) 
+as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) 
+as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) 
+as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) 
+as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) 
+as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) 
+as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) 
+as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) 
+as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) 
+as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) 
+as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) 
+as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) 
+as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) 
+as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) 
+as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) 
+as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) 
+as 'Puducherry'
+from new_table)a;
+
+
+
+
+
+
+--[CREATED TABLE WITH TOTAL SUM FOR EACH STATE COLUMNS AS 'TOTAL_AGGREGATE_EXPENDITURES']
+
+
+select * into total_Aggregate_Expenditures from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Aggregate_Expenditures)as a;
+
+
+select * FROM total_Aggregate_Expenditures;
+
+
+
+
+
+
+
+
+--2)DATA CLEANING OF CAPITAL EXPENDITURE TABLE
+--[Changed Blank cells and cells Containing '–' into Null and stored the table as 'CAPITAL_EXPEN']
+
+
+SELECT * INTO Capital_Expen FROM (
+SELECT STATE AS Year,
+CASE WHEN [ANDHRA PRADESH] = '–' THEN NULL ELSE [ANDHRA PRADESH] 
+END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' THEN NULL ELSE [Arunachal Pradesh] 
+END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' THEN NULL ELSE [Chhattisgarh] 
+END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' THEN NULL ELSE [Himachal Pradesh] 
+END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' THEN NULL ELSE [Jammu & Kashmir] 
+END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' THEN NULL ELSE [Madhya Pradesh] 
+END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' THEN NULL ELSE [Uttar Pradesh] 
+END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Capital_Expenditure)AS A;
+
+
+
+SELECT * FROM Capital_Expen
+
+
+
+
+
+--[CHANGED THE DATATYPE FROM VARCHAR TO FLOAT FOR THE DATA AGGREGATION ]
+
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Capital_Expen
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+ 
+
+
+
+--[CREATED A NEW TABLE ( NEW_TABLE1 ) WITH NEW COLUMN 'YEAR_RANGE' FOR 5 YEAR GROUPS ]
+
+
+select * into new_table1 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Capital_Expen)b)c
+
+
+
+
+
+--[SUM AGGREGATED THE VALUES IN 5 YEAR GROUPPING FOR EACH STATE COLUMNS ]
+
+
+select * into Capital_Expenditures from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) 
+as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) 
+as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) 
+as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) 
+as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) 
+as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) 
+as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) 
+as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) 
+as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) 
+as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) 
+as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) 
+as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) 
+as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) 
+as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) 
+as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) 
+as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) 
+as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) 
+as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) 
+as 'Puducherry'
+from new_table1)a
+
+
+
+select * from Capital_Expenditures;
+
+
+
+
+
+
+--[CREATED A NEW TABLE WITH TOTAL SUM FROM 1980 TO 2015 FOR EACH STATES AS 'TOTAL_CAPITAL_EXPENDITURES']
+
+
+select * into total_Capital_Expenditures from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Capital_Expenditures)as a;
+
+
+select * from total_Capital_Expenditures;
+
+
+
+
+
+
+
+--3)DATA CLEANING OF GROSS_FISCAL DEFICITS TABLE
+--[Changed Blank cells and cells Containing '–' into Null and stored the table as 'Gross_Fiscal']
+
+
+SELECT * INTO Gross_Fiscal FROM (
+SELECT year,
+CASE WHEN [ANDHRA PRADESH] = '–' THEN NULL ELSE [ANDHRA PRADESH] 
+END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' THEN NULL ELSE [Arunachal Pradesh] 
+END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' THEN NULL ELSE [Chhattisgarh] 
+END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' THEN NULL ELSE [Himachal Pradesh] 
+END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' THEN NULL ELSE [Jammu & Kashmir] 
+END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' THEN NULL ELSE [Madhya Pradesh] 
+END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' THEN NULL ELSE [Uttar Pradesh] 
+END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Gross_Fiscal_Deficits)AS A;
+
+
+SELECT * FROM Gross_Fiscal
+
+
+
+
+--[CHANGED THE DATATYPE OF EACH STATE COLUMN FROM VARCHAR TO FLOAT]
+
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Gross_Fiscal
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+ 
+--[CREATED NEW TABLE ( NEW_TABLE2 ) WITH NEW COLUMN AS 'YEAR RANGE" WITH 5 YEAR GROUPS ]
+
+
+select * into new_table2 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Gross_Fiscal)b)c
+
+
+
+
+
+--[AGGREGATED THE SUM IN THE 5 YEAR RANGE AND CREATED NEW_TABLE AS 'GROSS_FISCAL_DEFICITSS']
+
+
+select * into Gross_Fiscal_Deficitss from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) 
+as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) 
+as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) 
+as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) 
+as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) 
+as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) 
+as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) 
+as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) 
+as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) 
+as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) 
+as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) 
+as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) 
+as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) 
+as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) 
+as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) 
+as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) 
+as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) 
+as 'Puducherry'
+from new_table2)a
+
+
+select * from Gross_Fiscal_Deficitss
+
+
+
+
+
+--[CREATED A NEW TABLE 'TOTAL_GROSS_FISCAL_DEFICITSS ' WITH TOTAL SUM FOR EACH COLUMN FROM 1980 TO 2015]
+
+select * into total_Gross_Fiscal_Deficitss from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Gross_Fiscal_Deficitss)as a;
+
+
+select * from total_Gross_Fiscal_Deficitss;
+
+
+
+
+
+--[DONE THE ANALYSIS FOR THE TOP 10 STATES ACCORDING TO GROSS_FISCAL_DEFICITSS ]
+
+
+SELECT * INTO RANKS FROM(
+select state,total,dense_rank()over (order by total desc) as rank
+from TGED)AS A
+
+
+SELECT * INTO TOP_10_STATES_GROSS_FISCAL_DIFICITS FROM(
+SELECT STATE,TOTAL FROM RANKS WHERE RANK <11)AS A
+
+
+SELECT * FROM TOP_10_STATES_GROSS_FISCAL_DIFICITS;
+
+
+
+
+
+
+
+
+--4)DATA CLEANING OF NOMINAL GSDP SERIES TABLE
+--[Changed Blank cells and cells Containing '–'OR 'NA' VALUES into Null and stored the table as 'Nominal_GSDP']
+
+
+
+
+SELECT * INTO Nominal_GSDP FROM (
+SELECT state as year,
+CASE WHEN [ANDHRA PRADESH] = '' or [ANDHRA PRADESH] = 'NA'  THEN NULL 
+ELSE [ANDHRA PRADESH] END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '' OR [Arunachal Pradesh] = 'NA' THEN NULL 
+ELSE [Arunachal Pradesh] END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '' OR [Assam] = 'NA' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '' OR [Bihar] = 'NA' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '' OR [Chhattisgarh] = 'NA' THEN NULL 
+ELSE [Chhattisgarh] END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '' OR [Goa] = 'NA' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '' OR [Gujarat] = 'NA' THEN NULL ELSE [Gujarat] 
+END AS 'Gujarat',
+CASE WHEN [Haryana] = '' OR [Haryana] = 'NA' THEN NULL ELSE [Haryana] 
+END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '' OR [Himachal Pradesh] = 'NA'  THEN NULL 
+ELSE [Himachal Pradesh] END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '' OR [Jammu & Kashmir] = 'NA' THEN NULL 
+ELSE [Jammu & Kashmir] END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '' OR [Jharkhand] = 'NA' THEN NULL ELSE [Jharkhand] 
+END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '' OR [Karnataka] = 'NA' THEN NULL ELSE [Karnataka] 
+END AS 'Karnataka',
+CASE WHEN [Kerala] = '' OR [Kerala] = 'NA' THEN NULL ELSE [Kerala] 
+END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = ''OR [Madhya Pradesh] = 'NA' THEN NULL
+ELSE [Madhya Pradesh] END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '' OR [Maharashtra] = 'NA' THEN NULL 
+ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '' OR [Manipur] = 'NA' THEN NULL ELSE [Manipur]
+ END AS 'Manipur',
+CASE WHEN [Meghalaya] = '' OR [Meghalaya] = 'NA' THEN NULL ELSE [Meghalaya] 
+END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '' OR [Mizoram] = 'NA' THEN NULL ELSE [Mizoram] 
+END AS 'Mizoram',
+CASE WHEN [Nagaland] = '' OR [Nagaland] = 'NA' THEN NULL ELSE [Nagaland] 
+END AS 'Nagaland',
+CASE WHEN [Odisha] = '' OR [Odisha] = 'NA' THEN NULL ELSE [Odisha] 
+END AS 'Odisha',
+CASE WHEN [Punjab] = '' OR [Punjab] = 'NA' THEN NULL ELSE [Punjab] 
+END AS 'Punjab',
+CASE WHEN [Rajasthan] = '' OR [Rajasthan] = 'NA' THEN NULL ELSE [Rajasthan] 
+END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '' OR [Sikkim] = 'NA' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '' OR [Tamil nadu] = 'NA' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = ''OR [Telangana] = 'NA'  THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '' OR [Tripura] = 'NA' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '' OR [Uttar Pradesh] = 'NA' THEN NULL ELSE [Uttar Pradesh] END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '' OR [Uttarakhand] = 'NA' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '' OR [West Bengal] = 'NA' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '' OR [Delhi] = 'NA' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '' OR [Puducherry] = 'NA' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Nominal_GSDP_Series)AS A;
+
+
+SELECT * FROM Nominal_GSDP
+
+
+
+
+
+--[CHANGED THE DATATYPE OF EACH STATE COLUMNS FROM VARCHAR TO FLOAT ]
+
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Nominal_GSDP
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+
+
+--[CREATED A NEW TABLE (NEW_TABLE3) WITH NEW COLUMN AS 'YEAR RANGE' FOR 5 YEAR GROUP]
+
+
+
+select * into new_table3 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Nominal_GSDP)b)c
+
+
+
+
+
+--[AGGREGATED (SUM) THE VALUES IN 5 YEAR GROUP FOR EACH COLUMNS AND STORED AS 'NOMINAL_GSDP_SERIESS']
+
+select * into Nominal_GSDP_Seriess from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) as 'Puducherry'
+from new_table3)a
+
+
+select * from Nominal_GSDP_Seriess
+
+
+
+
+
+--[CREATED A NEW TABLE WITH TOTAL SUM FOREACH STATES COLUMN]
+
+
+select * into total_Nominal_GSDP_Seriess from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Nominal_GSDP_Seriess)as a;
+
+select * FROM total_Nominal_GSDP_Seriess;
+
+
+
+
+
+
+
+--5)DATA CLEANING OF OWN TAX REVENUE TABLE
+--[Changed Blank cells and cells Containing '–'OR 'NA' VALUES into Null and stored the table as 'OWN_TAX']
+
+
+SELECT * INTO Own_Tax FROM (
+SELECT state as year,
+CASE WHEN [ANDHRA PRADESH] = '–' or [ANDHRA PRADESH] = 'NA'  THEN NULL ELSE [ANDHRA PRADESH] END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' OR [Arunachal Pradesh] = 'NA' THEN NULL ELSE [Arunachal Pradesh] END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' OR [Assam] = 'NA' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' OR [Bihar] = 'NA' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' OR [Chhattisgarh] = 'NA' THEN NULL ELSE [Chhattisgarh] END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' OR [Goa] = 'NA' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' OR [Gujarat] = 'NA' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' OR [Haryana] = 'NA' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' OR [Himachal Pradesh] = 'NA'  THEN NULL ELSE [Himachal Pradesh] END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' OR [Jammu & Kashmir] = 'NA' THEN NULL ELSE [Jammu & Kashmir] END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' OR [Jharkhand] = 'NA' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' OR [Karnataka] = 'NA' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' OR [Kerala] = 'NA' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' OR [Madhya Pradesh] = 'NA' THEN NULL ELSE [Madhya Pradesh] END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' OR [Maharashtra] = 'NA' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' OR [Manipur] = 'NA' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' OR [Meghalaya] = 'NA' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' OR [Mizoram] = 'NA' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' OR [Nagaland] = 'NA' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' OR [Odisha] = 'NA' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' OR [Punjab] = 'NA' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' OR [Rajasthan] = 'NA' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' OR [Sikkim] = 'NA' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' OR [Tamil nadu] = 'NA' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' OR [Telangana] = 'NA'  THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' OR [Tripura] = 'NA' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' OR [Uttar Pradesh] = 'NA' THEN NULL ELSE [Uttar Pradesh] END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' OR [Uttarakhand] = 'NA' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' OR [West Bengal] = 'NA' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' OR [Delhi] = 'NA' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' OR [Puducherry] = 'NA' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Own_Tax_Revenues)AS A;
+
+
+SELECT * FROM Own_Tax
+
+
+
+
+
+--[ALTERED THE DATATYPEOF EACH STATE COLUMNS FROM VARCHAR TO FLOAT]
+
+ALTER TABLE Own_Tax
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Own_Tax
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+select * from Own_Tax
+
+
+
+
+
+--[CREATED A NEW TABLE AS 'NEW_TABLE4' WITH ADDED COLUM AS 'YEAR RANGE' OF 5 YEAR GROUPS]
+
+
+select * into new_table4 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Own_Tax)b)c
+
+
+
+
+
+
+
+--[SUM AGGREGATED THE THE COLUMNS VALUE IN5 YEAR  GROUPS FOR EACH STATE COLUMNS]
+
+
+select * into Own_Tax_Revenuess from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) as 'Puducherry'
+from new_table4)a
+
+
+select * from Own_Tax_Revenuess
+
+
+
+
+
+
+
+--[CREATED A NEW TABLE FOR TOTAL SUM OF DATA FROM 1980 TO 2015 FOREACH STATE COLUMNS AS 'TOTAL_OWN_TAX_REVENUESS']
+
+select * into total_Own_Tax_Revenuess from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal pradesh]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Own_Tax_Revenuess)as a;
+
+select * FROM total_Own_Tax_Revenuess;
+
+
+
+
+
+
+
+--6)DATA CLEANING OF REVENUE EXPENDITURES TABLE
+--[Changed Blank cells and cells Containing '–'OR 'NA' VALUES into Null and stored the table as 'Revenue_Expen']
+
+
+SELECT * INTO Revenue_Expen FROM (
+SELECT state as year,
+CASE WHEN [ANDHRA PRADESH] = '–' or [ANDHRA PRADESH] = 'NA'  THEN NULL ELSE [ANDHRA PRADESH] END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' OR [Arunachal Pradesh] = 'NA' THEN NULL ELSE [Arunachal Pradesh] END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' OR [Assam] = 'NA' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' OR [Bihar] = 'NA' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' OR [Chhattisgarh] = 'NA' THEN NULL ELSE [Chhattisgarh] END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' OR [Goa] = 'NA' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' OR [Gujarat] = 'NA' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' OR [Haryana] = 'NA' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' OR [Himachal Pradesh] = 'NA'  THEN NULL ELSE [Himachal Pradesh] END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' OR [Jammu & Kashmir] = 'NA' THEN NULL ELSE [Jammu & Kashmir] END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' OR [Jharkhand] = 'NA' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' OR [Karnataka] = 'NA' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' OR [Kerala] = 'NA' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' OR [Madhya Pradesh] = 'NA' THEN NULL ELSE [Madhya Pradesh] END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' OR [Maharashtra] = 'NA' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' OR [Manipur] = 'NA' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' OR [Meghalaya] = 'NA' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' OR [Mizoram] = 'NA' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' OR [Nagaland] = 'NA' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' OR [Odisha] = 'NA' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' OR [Punjab] = 'NA' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' OR [Rajasthan] = 'NA' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' OR [Sikkim] = 'NA' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' OR [Tamil nadu] = 'NA' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' OR [Telangana] = 'NA'  THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' OR [Tripura] = 'NA' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' OR [Uttar Pradesh] = 'NA' THEN NULL ELSE [Uttar Pradesh] END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' OR [Uttarakhand] = 'NA' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' OR [West Bengal] = 'NA' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' OR [Delhi] = 'NA' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' OR [Puducherry] = 'NA' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Revenue_Expenditure)AS A;
+
+
+SELECT * FROM Revenue_Expen
+
+
+
+
+
+---[ALTERED THE DATATYPE FROM VARCHAR TO FLOAT FOR EACH STATE COLUMNS]
+
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Revenue_Expen
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+
+--[CREATED A NEW TABLE WITH ADDED COLUMN AS 'YEAR RANGE' OF 5 YEAR GROUP]
+
+select * into new_table6 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Revenue_Expen)b)c
+
+
+
+
+--[SUM AGGREGATED THE VALUES IN 5 YEAR GROUPS FOR EACH STATES]
+
+select * into Revenue_Expendituress from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) as 'Puducherry'
+from new_table6)a
+
+
+select * from Revenue_Expendituress
+
+
+
+
+
+--[CREATED A TABLE FOR TOTAL SUM VALUE OF REVENUE_EXPENDITURE OF EACH STATE]
+
+select * into total_Revenue_Expendituress from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Revenue_Expendituress)as a;
+
+select * FROM total_Revenue_Expendituress;
+
+
+
+
+
+
+--7)DATA CLEANING OF SOCIAL SECTOR EXPENDITURE TABLE
+--[Changed Blank cells and cells Containing '–'OR 'NA' VALUES into Null and stored the table as 'Social_Sector_Expen']
+
+
+SELECT * INTO Social_Sector_Expen
+ FROM (
+SELECT state as year,
+CASE WHEN [ANDHRA PRADESH] = '–' or [ANDHRA PRADESH] = 'NA'  THEN NULL ELSE [ANDHRA PRADESH] END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' OR [Arunachal Pradesh] = 'NA' THEN NULL ELSE [Arunachal Pradesh] END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' OR [Assam] = 'NA' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' OR [Bihar] = 'NA' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' OR [Chhattisgarh] = 'NA' THEN NULL ELSE [Chhattisgarh] END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' OR [Goa] = 'NA' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' OR [Gujarat] = 'NA' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' OR [Haryana] = 'NA' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' OR [Himachal Pradesh] = 'NA'  THEN NULL ELSE [Himachal Pradesh] END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' OR [Jammu & Kashmir] = 'NA' THEN NULL ELSE [Jammu & Kashmir] END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' OR [Jharkhand] = 'NA' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' OR [Karnataka] = 'NA' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' OR [Kerala] = 'NA' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' OR [Madhya Pradesh] = 'NA' THEN NULL ELSE [Madhya Pradesh] END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' OR [Maharashtra] = 'NA' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' OR [Manipur] = 'NA' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' OR [Meghalaya] = 'NA' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' OR [Mizoram] = 'NA' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' OR [Nagaland] = 'NA' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' OR [Odisha] = 'NA' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' OR [Punjab] = 'NA' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' OR [Rajasthan] = 'NA' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' OR [Sikkim] = 'NA' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' OR [Tamil nadu] = 'NA' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' OR [Telangana] = 'NA'  THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' OR [Tripura] = 'NA' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' OR [Uttar Pradesh] = 'NA' THEN NULL ELSE [Uttar Pradesh] END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' OR [Uttarakhand] = 'NA' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' OR [West Bengal] = 'NA' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' OR [Delhi] = 'NA' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' OR [Puducherry] = 'NA' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Social_Sector_Expenditure)AS A;
+
+
+SELECT * FROM Social_Sector_Expen
+
+
+
+
+--[ALTERED THE DATATYPE OF EACH STATES COLUMNS FROM VARCHAR TO FLOAT]
+
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Social_Sector_Expen
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+
+select * from Social_Sector_Expen
+
+
+
+--[CREATED A NEW TABLE AS 'NEW_TABLE7' WITH ADDED COLUMN 'YEAR RANGE' OF 5 YEAR GROUP ]
+
+
+select * into new_table7 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Social_Sector_Expen)b)c
+
+
+
+
+
+--[SUM AGGREGATED THE TOTAL VALUES IN 5 YEAR GROUP FOR EACH STATES]
+
+
+select * into Social_Sector_Expenditures from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) as 'Puducherry'
+from new_table7)a
+
+
+select * from Social_Sector_Expenditures
+
+
+
+
+
+--[CREATED A NEW TABLE WITH TOTAL SUM OF THE GIVEN DATA FOR EACH STATE FROM SOCIAL_SECTOR_EXPENDITURES]
+
+
+select * into total_Social_Sector_Expenditures from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Social_Sector_Expenditures)as a;
+
+select * FROM total_Social_Sector_Expenditures;
+
+
+
+
+
+
+
+--8)DATA CLEANING OF SOCIAL SECTOR EXPENDITURE TABLE
+--[Changed Blank cells and cells Containing '–'OR 'NA' VALUES into Null and stored the table as 'Revenue_Defi']
+
+
+
+SELECT * INTO Revenue_Defi FROM (
+SELECT state as year,
+CASE WHEN [ANDHRA PRADESH] = '–' or [ANDHRA PRADESH] = '' or [ANDHRA PRADESH] = 'NA'  THEN NULL ELSE [ANDHRA PRADESH] END AS 'Andra Pradesh',
+CASE WHEN [Arunachal Pradesh] = '–' or [Arunachal Pradesh] = '' OR [Arunachal Pradesh] = 'NA' THEN NULL ELSE [Arunachal Pradesh] END AS 'Arunachal Pradesh',
+CASE WHEN [Assam] = '–' or [Assam] = '' OR [Assam] = 'NA' THEN NULL ELSE [Assam] END AS 'Assam',
+CASE WHEN [Bihar] = '–' OR [Bihar] = '' OR [Bihar] = 'NA' THEN NULL ELSE [Bihar] END AS 'Bihar',
+CASE WHEN [Chhattisgarh] = '–' OR [Chhattisgarh] = '' OR [Chhattisgarh] = 'NA' THEN NULL ELSE [Chhattisgarh] END AS 'Chhattisgarh',
+CASE WHEN [Goa] = '–' OR [Goa] = '' OR [Goa] = 'NA' THEN NULL ELSE [Goa] END AS 'Goa',
+CASE WHEN [Gujarat] = '–' OR [Gujarat] = '' OR [Gujarat] = 'NA' THEN NULL ELSE [Gujarat] END AS 'Gujarat',
+CASE WHEN [Haryana] = '–' OR [Haryana] = '' OR [Haryana] = 'NA' THEN NULL ELSE [Haryana] END AS 'Haryana',
+CASE WHEN [Himachal Pradesh] = '–' OR [Himachal Pradesh] = '' OR [Himachal Pradesh] = 'NA'  THEN NULL ELSE [Himachal Pradesh] END AS 'Himachal Pradesh',
+CASE WHEN [Jammu & Kashmir] = '–' OR [Jammu & Kashmir] = '' OR [Jammu & Kashmir] = 'NA' THEN NULL ELSE [Jammu & Kashmir] END AS 'Jammu & Kashmir',
+CASE WHEN [Jharkhand] = '–' OR [Jharkhand] = 'p' OR [Jharkhand] = 'NA' THEN NULL ELSE [Jharkhand] END AS 'Jharkhand',
+CASE WHEN [Karnataka] = '–' OR [Karnataka] = '' OR [Karnataka] = 'NA' THEN NULL ELSE [Karnataka] END AS 'Karnataka',
+CASE WHEN [Kerala] = '–' OR [Kerala] = '' OR [Kerala] = 'NA' THEN NULL ELSE [Kerala] END AS 'Kerala',
+CASE WHEN [Madhya Pradesh] = '–' OR [Madhya Pradesh] = '' OR [Madhya Pradesh] = 'NA' THEN NULL ELSE [Madhya Pradesh] END AS 'Madhya Pradesh',
+CASE WHEN [Maharashtra] = '–' OR [Maharashtra] = '' OR [Maharashtra] = 'NA' THEN NULL ELSE [Maharashtra] END AS 'Maharashtra',
+CASE WHEN [Manipur] = '–' OR [Manipur] = '' OR [Manipur] = 'NA' THEN NULL ELSE [Manipur] END AS 'Manipur',
+CASE WHEN [Meghalaya] = '–' OR [Meghalaya] = '' OR [Meghalaya] = 'NA' THEN NULL ELSE [Meghalaya] END AS 'Meghalaya',
+CASE WHEN [Mizoram] = '–' OR [Mizoram] = '' OR [Mizoram] = 'NA' THEN NULL ELSE [Mizoram] END AS 'Mizoram',
+CASE WHEN [Nagaland] = '–' OR [Nagaland] = '' OR [Nagaland] = 'NA' THEN NULL ELSE [Nagaland] END AS 'Nagaland',
+CASE WHEN [Odisha] = '–' OR [Odisha] = '' OR [Odisha] = 'NA' THEN NULL ELSE [Odisha] END AS 'Odisha',
+CASE WHEN [Punjab] = '–' OR [Punjab] = '' OR [Punjab] = 'NA' THEN NULL ELSE [Punjab] END AS 'Punjab',
+CASE WHEN [Rajasthan] = '–' OR [Rajasthan] = '' OR [Rajasthan] = 'NA' THEN NULL ELSE [Rajasthan] END AS 'Rajasthan',
+CASE WHEN [Sikkim] = '–' OR [Sikkim] = '' OR [Sikkim] = 'NA' THEN NULL ELSE [Sikkim] END AS 'Sikkim',
+CASE WHEN [Tamil nadu] = '–' OR [Tamil nadu] = '' OR [Tamil nadu] = 'NA' THEN NULL ELSE [Tamil nadu] END AS 'Tamil nadu',
+CASE WHEN [Telangana] = '–' OR [Telangana] = '' OR [Telangana] = 'NA'  THEN NULL ELSE [Telangana] END AS 'Telangana',
+CASE WHEN [Tripura] = '–' OR [Tripura] = '' OR [Tripura] = 'NA' THEN NULL ELSE [Tripura] END AS 'Tripura',
+CASE WHEN [Uttar Pradesh] = '–' OR [Uttar Pradesh] = '' OR [Uttar Pradesh] = 'NA' THEN NULL ELSE [Uttar Pradesh] END AS 'Uttar Pradesh',
+CASE WHEN [Uttarakhand] = '–' OR [Uttarakhand] = '' OR [Uttarakhand] = 'NA' THEN NULL ELSE [Uttarakhand] END AS 'Uttarakhand',
+CASE WHEN [West Bengal] = '–' OR [West Bengal] = '' OR [West Bengal] = 'NA' THEN NULL ELSE [West Bengal] END AS 'West Bengal',
+CASE WHEN [Delhi] = '–' OR [Delhi] = '' OR [Delhi] = 'NA' THEN NULL ELSE [Delhi] END AS 'Delhi',
+CASE WHEN [Puducherry] = '–' OR [Puducherry] = '' OR [Puducherry] = 'NA' THEN NULL ELSE [Puducherry] END AS 'Puducherry'
+FROM Revenue_Deficits)AS A;
+
+
+SELECT * FROM Revenue_Defi
+
+
+
+
+
+
+--[ALTERED THE DATATYPEFOREACH STATE COLUMNS FROM VARCHAR TO FLOAT]
+
+
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Andra Pradesh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Arunachal Pradesh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Assam] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Bihar] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Chhattisgarh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Goa] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Gujarat] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Haryana] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Himachal Pradesh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Jammu & Kashmir] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Jharkhand] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Karnataka] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Kerala] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Madhya Pradesh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Maharashtra] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Manipur] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Meghalaya] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Mizoram] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Nagaland] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Odisha] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Punjab] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Rajasthan] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Sikkim] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Tamil nadu] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Telangana] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Tripura] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Uttar Pradesh] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Uttarakhand] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [Delhi] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [West Bengal] FLOAT;
+ALTER TABLE Revenue_Defi
+ALTER COLUMN [puducherry] FLOAT;
+
+
+
+ 
+
+
+
+--[CREATED A NEW TABLE AS 'NEW_TABLE8' WITH ADDED COLUM AS 'YEAR RANGE' FOR 5 YEAR GROUP]
+
+
+select * into new_table8 from (
+select *,
+case when rank between 1 and 5 then '1980-1984'
+when rank between 6 and 10 then '1985-1989'
+when rank between 11 and 15 then '1990-1994'
+when rank between 16 and 20 then '1995-1999'
+when rank between 21 and 25 then '2000-2004'
+when rank between 26 and 30 then '2005-2009'
+when rank between 31 and 35 then '2010-2014'
+when rank between 36 and 40 then '2015'
+end as year_range
+from (select * ,ROW_NUMBER() over (order by year)as rank from Revenue_Defi)b)c
+
+
+
+
+
+--[SUM AGGREAGATED THE TOTAL VALUES IN5 YEAR GROUPS FOR EACH STATE]
+
+
+
+select * into Revenue_Deficitss from (
+select distinct(year_range) ,sum([andra pradesh])over (partition by year_range order by year_range)as 'andhra pradesh',
+sum([Arunachal PRADESH])over (partition by year_range order by year_range) as 'Arunachal Pradesh',
+sum([Assam]) over (partition by year_range order by year_range) AS 'Assam',
+sum([Bihar]) over (partition by year_range order by year_range) as 'Bihar',
+sum([Chhattisgarh]) over (partition by year_range order by year_range) as 'Chhattisgarh',
+sum([Goa]) over (partition by year_range order by year_range) as 'Goa',
+sum ([Gujarat])over (partition by year_range order by year_range) as 'Gujarat',
+sum([Haryana]) over (partition by year_range order by year_range) as 'Haryana',
+sum([Himachal Pradesh])over (partition by year_range order by year_range) as 'Himachal Pradesh',
+sum([Jammu & Kashmir]) over (partition by year_range order by year_range) as 'Jammu & Kashmir',
+sum([Jharkhand]) over (partition by year_range order by year_range) as 'Jharkhand',
+sum ([Karnataka])over (partition by year_range order by year_range) as 'Karnataka',
+sum ([Kerala]) over (partition by year_range order by year_range) as 'Kerala',
+sum([Madhya Pradesh])over (partition by year_range order by year_range) as 'Madhya Pradesh',
+sum([Maharashtra]) over (partition by year_range order by year_range) as 'Maharashtra',
+sum([Manipur]) over (partition by year_range order by year_range) as 'Manipur',
+sum([Meghalaya]) over (partition by year_range order by year_range) as 'Meghalaya',
+sum([Mizoram]) over (partition by year_range order by year_range) as 'Mizoram',
+sum([Nagaland]) over (partition by year_range order by year_range) as 'Nagaland',
+sum([Odisha])over (partition by year_range order by year_range) as 'Odisha',
+sum ([Punjab]) over (partition by year_range order by year_range) as 'Punjab',
+sum([Rajasthan]) over (partition by year_range order by year_range) as 'Rajasthan',
+sum([Sikkim]) over (partition by year_range order by year_range) as 'Sikkim',
+sum([Tamil nadu]) over (partition by year_range order by year_range) as 'Tamil nadu',
+sum([Telangana])over (partition by year_range order by year_range) as 'Telangana',
+sum([Tripura]) over (partition by year_range order by year_range) as 'Tripura',
+sum([Uttar Pradesh]) over (partition by year_range order by year_range) as 'Uttar Pradesh',
+sum([Uttarakhand]) over (partition by year_range order by year_range) as 'Uttarakhand',
+sum([West Bengal]) over (partition by year_range order by year_range) as 'West Bengal',
+sum([Delhi]) over (partition by year_range order by year_range) as 'Delhi',
+sum([Puducherry])over (partition by year_range order by year_range) as 'Puducherry'
+from new_table8)a
+
+
+select * from Revenue_Deficitss
+
+
+
+
+--[CREATED A TABLE WITH TOTAL VALUES FOR EACH STATE OF GIVEN DATA]
+
+
+select * into total_Revenue_Deficitss from(
+select
+sum([andhra pradesh])as 'andhra pradesh',
+sum([Arunachal PRADESH]) as 'Arunachal Pradesh',
+sum([Assam]) AS 'Assam',
+sum([Bihar]) as 'Bihar',
+sum([Chhattisgarh])  as 'Chhattisgarh',
+sum([Goa]) as 'Goa',
+sum ([Gujarat]) as 'Gujarat',
+sum([Haryana])  as 'Haryana',
+sum([Himachal Pradesh]) as 'Himachal Pradesh',
+sum([Jammu & Kashmir])  as 'Jammu & Kashmir',
+sum([Jharkhand]) as 'Jharkhand',
+sum ([Karnataka]) as 'Karnataka',
+sum ([Kerala]) as 'Kerala',
+sum([Madhya Pradesh]) as 'Madhya Pradesh',
+sum([Maharashtra]) as 'Maharashtra',
+sum([Manipur])  as 'Manipur',
+sum([Meghalaya])  as 'Meghalaya',
+sum([Mizoram])  as 'Mizoram',
+sum([Nagaland])  as 'Nagaland',
+sum([Odisha]) as 'Odisha',
+sum ([Punjab]) as 'Punjab',
+sum([Rajasthan]) as 'Rajasthan',
+sum([Sikkim])  as 'Sikkim',
+sum([Tamil nadu]) as 'Tamil nadu',
+sum([Telangana]) as 'Telangana',
+sum([Tripura]) as 'Tripura',
+sum([Uttar Pradesh]) as 'Uttar Pradesh',
+sum([Uttarakhand]) as 'Uttarakhand',
+sum([West Bengal]) as 'West Bengal',
+sum([Delhi])  as 'Delhi',
+sum([Puducherry]) as 'Puducherry' from Revenue_Deficitss)as a;
+
+
+
+select * FROM total_Revenue_Deficitss;
+
+
+
+
+
+--[FOR UPWARD AND DOWNWARD TREND ANALYSIS FROM THE GROSS FISCAL DEFICITS TABLE]
+
+
+select year_range,
+case when ([ANDHRA PRADESH]) > (lag([ANDHRA PRADESH])over (order by year_range)) THEN 'Upward' ELSE 'Downward' END AS 'Andra Pradesh',
+CASE WHEN ([Arunachal Pradesh]) >(lag([Arunachal Pradesh]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Arunachal Pradesh',
+CASE WHEN ([Assam]) >(lag([Assam]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Assam',
+CASE WHEN ([Bihar]) > (lag([Bihar]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Bihar',
+CASE WHEN ([Chhattisgarh]) > (lag([Chhattisgarh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Chhattisgarh',
+CASE WHEN ([Goa]) > (lag([Goa]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Goa',
+CASE WHEN ([Gujarat]) > (lag([Gujarat]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Gujarat',
+CASE WHEN ([Haryana]) > (lag([Haryana]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Haryana',
+CASE WHEN ([Himachal Pradesh]) > (lag([Himachal Pradesh]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Himachal Pradesh',
+CASE WHEN ([Jammu & Kashmir]) > (lag([Jammu & Kashmir]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Jammu & Kashmir',
+CASE WHEN ([Jharkhand]) >(lag([Jharkhand]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Jharkhand',
+CASE WHEN ([Karnataka]) > (lag([Karnataka]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Karnataka',
+CASE WHEN ([Kerala])> (lag([Kerala]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Kerala',
+CASE WHEN ([Madhya Pradesh]) > (lag([Madhya Pradesh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Madhya Pradesh',
+CASE WHEN ([Maharashtra]) > (lag([Maharashtra])over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Maharashtra',
+CASE WHEN ([Manipur]) > (lag([Manipur]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Manipur',
+CASE WHEN ([Meghalaya]) > (lag([Meghalaya]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Meghalaya',
+CASE WHEN ([Mizoram]) > (lag([Mizoram]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Mizoram',
+CASE WHEN ([Nagaland]) > (lag([Nagaland]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Nagaland',
+CASE WHEN ([Odisha]) > (lag([Odisha]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Odisha',
+CASE WHEN ([Punjab]) > (lag([Punjab]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Punjab',
+CASE WHEN ([Rajasthan]) >(lag([Rajasthan]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Rajasthan',
+CASE WHEN ([Sikkim]) > (lag([Sikkim]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Sikkim',
+CASE WHEN ([Tamil nadu]) > (lag([Tamil nadu]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Tamil nadu',
+CASE WHEN ([Telangana]) > (lag([Telangana]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Telangana',
+CASE WHEN ([Tripura]) > (lag([Tripura]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Tripura',
+CASE WHEN ([Uttar Pradesh]) > (lag([Uttar Pradesh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Uttar Pradesh',
+CASE WHEN ([Uttarakhand]) > (lag([Uttarakhand]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Uttarakhand',
+CASE WHEN ([West Bengal]) > (lag([West Bengal]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'West Bengal',
+CASE WHEN ([Delhi]) > (lag([Delhi]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Delhi',
+CASE WHEN ([Puducherry]) > (lag([Puducherry]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Puducherry'
+from Gross_Fiscal_Deficitss
+
+
+
+
+
+
+---[FOR UPWARD AND DOWNWARD TREND FOR ANALYSIS  FROM THE GROSS FISCAL DEFICITS TABLE]
+
+
+
+select year_range,
+case when ([ANDHRA PRADESH]) > (lag([ANDHRA PRADESH])over (order by year_range)) THEN 'Upward' ELSE 'Downward' END AS 'Andra Pradesh',
+CASE WHEN ([Arunachal Pradesh]) >(lag([Arunachal Pradesh]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Arunachal Pradesh',
+CASE WHEN ([Assam]) >(lag([Assam]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Assam',
+CASE WHEN ([Bihar]) > (lag([Bihar]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Bihar',
+CASE WHEN ([Chhattisgarh]) > (lag([Chhattisgarh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Chhattisgarh',
+CASE WHEN ([Goa]) > (lag([Goa]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Goa',
+CASE WHEN ([Gujarat]) > (lag([Gujarat]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Gujarat',
+CASE WHEN ([Haryana]) > (lag([Haryana]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Haryana',
+CASE WHEN ([Himachal Pradesh]) > (lag([Himachal Pradesh]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Himachal Pradesh',
+CASE WHEN ([Jammu & Kashmir]) > (lag([Jammu & Kashmir]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Jammu & Kashmir',
+CASE WHEN ([Jharkhand]) >(lag([Jharkhand]) over (order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Jharkhand',
+CASE WHEN ([Karnataka]) > (lag([Karnataka]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Karnataka',
+CASE WHEN ([Kerala])> (lag([Kerala]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Kerala',
+CASE WHEN ([Madhya Pradesh]) > (lag([Madhya Pradesh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Madhya Pradesh',
+CASE WHEN ([Maharashtra]) > (lag([Maharashtra])over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Maharashtra',
+CASE WHEN ([Manipur]) > (lag([Manipur]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Manipur',
+CASE WHEN ([Meghalaya]) > (lag([Meghalaya]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Meghalaya',
+CASE WHEN ([Mizoram]) > (lag([Mizoram]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Mizoram',
+CASE WHEN ([Nagaland]) > (lag([Nagaland]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Nagaland',
+CASE WHEN ([Odisha]) > (lag([Odisha]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Odisha',
+CASE WHEN ([Punjab]) > (lag([Punjab]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Punjab',
+CASE WHEN ([Rajasthan]) >(lag([Rajasthan]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Rajasthan',
+CASE WHEN ([Sikkim]) > (lag([Sikkim]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Sikkim',
+CASE WHEN ([Tamil nadu]) > (lag([Tamil nadu]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Tamil nadu',
+CASE WHEN ([Telangana]) > (lag([Telangana]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Telangana',
+CASE WHEN ([Tripura]) > (lag([Tripura]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Tripura',
+CASE WHEN ([Uttar Pradesh]) > (lag([Uttar Pradesh]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Uttar Pradesh',
+CASE WHEN ([Uttarakhand]) > (lag([Uttarakhand]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Uttarakhand',
+CASE WHEN ([West Bengal]) > (lag([West Bengal]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'West Bengal',
+CASE WHEN ([Delhi]) > (lag([Delhi]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Delhi',
+CASE WHEN ([Puducherry]) > (lag([Puducherry]) over(order by year_range)) then 'Upward' ELSE 'Downward' END AS 'Puducherry'
+from Nominal_GSDP_Seriess;
+
+
+
+
+
